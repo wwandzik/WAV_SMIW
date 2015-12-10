@@ -4,7 +4,8 @@
 
 void process_sample(int *sample1, int *sample2)
 {
-	return;
+	*sample1 = *sample1 - *sample2;
+	*sample2 = 0;
 }
 
 
@@ -35,7 +36,7 @@ void process_samples(int *buffer, int channels, int frames)
 		puts("Cannot process samples because number of channels is not equal to 2!");
 		return;
 	}
-	for (int i = 0; i < frames; i += 2)
+	for (int i = 0; i < frames * channels; i += 2)
 	{
 		process_sample(&(buffer[i]), &(buffer[i + 1]));
 	}
