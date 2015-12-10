@@ -2,10 +2,12 @@
 #include "sndfile.h"
 #include <stdlib.h>
 
-void process_sample(int *sample1, int *sample2)
+#define SAMPLE_SIZE short
+
+void process_sample(SAMPLE_SIZE *sample1, SAMPLE_SIZE *sample2)
 {
-	*sample1 = *sample1 - *sample2;
-	*sample2 = 0;
+	*sample1 = *sample1 + 2000000;
+	*sample2 = *sample2 + 20;
 }
 
 
@@ -17,19 +19,19 @@ void close_sndfiles(SNDFILE *input, SNDFILE *output)
 }
 
 
-void free_buffer(int *buffer, int channels)
+void free_buffer(SAMPLE_SIZE *buffer, int channels)
 {
 	free(buffer);
 }
 
 
-void write_output(SNDFILE *output, int *buffer, int channels, int frames)
+void write_output(SNDFILE *output, SAMPLE_SIZE *buffer, int channels, int frames)
 {
-	sf_write_int(output, buffer, channels * frames);
+	sf_write_short(output, buffer, channels * frames);
 }
 
 
-void process_samples(int *buffer, int channels, int frames)
+void process_samples(SAMPLE_SIZE *buffer, int channels, int frames)
 {
 	if (channels != 2)
 	{
@@ -43,13 +45,13 @@ void process_samples(int *buffer, int channels, int frames)
 }
 
 
-void read_input(SNDFILE *input, int *buffer, int channels, int frames)
+void read_input(SNDFILE *input, SAMPLE_SIZE *buffer, int channels, int frames)
 {
-	sf_read_int(input, buffer, channels * frames);
+	sf_read_short(input, buffer, channels * frames);
 }
 
 
-void alloc_buffer(int **buffer, int channels, int frames)
+void alloc_buffer(SAMPLE_SIZE **buffer, int channels, int frames)
 {
 	*buffer = malloc(channels * frames * sizeof(int));
 }
@@ -81,7 +83,7 @@ int main()
 {
 	SNDFILE *input, *output;
 	SF_INFO info;
-	int *buffer;
+	SAMPLE_SIZE *buffer;
 	
 	open_sndfiles("../input.wav", &input, "../output.wav", &output, &info);
 	int channels = info.channels, frames = info.frames;
